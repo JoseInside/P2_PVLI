@@ -36,8 +36,33 @@ battle.on('start', function (data) {
 });
 
 battle.on('turn', function (data) {
+    
     console.log('TURN', data);
+    
+    var list = Object.keys(this._charactersById);
+    var list2 = document.querySelectorAll('.character-list');
+    console.log(list);
 
+    var listHeroes = list2[0];
+    var listMonsters = list2[1];
+
+    for (var character in list){
+        var li = document.createElement('li');
+        //var aux = list[character].party;
+        console.log(character);
+        var aux = this._charactersById[list[character]];
+        
+        console.log(aux);
+        li.innerHTML = aux.name + ' (HP: '+ aux.hp + '/' + aux.maxHp + ',' + ' MP: ' + aux.mp + '/' + aux.maxMp + ')';
+        //list2.appendChild(li);
+        li.dataset.charaid = list[character];
+
+        if(aux.party === 'heroes'){
+            listHeroes.appendChild(li);
+        }
+        else listMonsters.appendChild(li);
+        
+    }
     // TODO: render the characters
     // TODO: highlight current character
     // TODO: show battle actions form
