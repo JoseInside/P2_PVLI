@@ -45,10 +45,10 @@ battle.on('turn', function (data) {
     var list2 = document.querySelectorAll('.character-list');
     var listHeroes = list2[0];
     var listMonsters = list2[1];
+    var render;
     listHeroes.innerHTML = '';
     listMonsters.innerHTML = '';
-    var render;
-
+    
     for (var cont = 0; cont < list.length; cont++ )
     {
         var aux = this._charactersById[list[cont]];
@@ -62,17 +62,17 @@ battle.on('turn', function (data) {
         if(aux.party === 'heroes'){
             listHeroes.innerHTML += render;
         }
-        else listMonsters.inner += render;
-        
+        else listMonsters.innerHTML += render;
     }
     
     // TODO: highlight current character
     //****
-    var active = document.querySelector('[data-chara-id="' + data.activeCharacterId + '"]');
+    var active = document.querySelector('#' + data.activeCharacterId );
     active.classList.add('active');
 
     // TODO: show battle actions form
-    
+
+
 });
 
 battle.on('info', function (data) {
