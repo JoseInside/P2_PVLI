@@ -47,19 +47,18 @@ battle.on('turn', function (data) {
     var listMonsters = list2[1];
     listHeroes.innerHTML = '';
     listMonsters.innerHTML = '';
+    var render;
 
     for (var cont = 0; cont < list.length; cont++ )
     {
         var aux = this._charactersById[list[cont]];
 
-        if( aux.hp < 1 ) var render = '<li data-chara-id="' + list[cont] + '" class ="dead">' + aux.name +'(HP: <strong>' + aux.hp +'</strong>/' +
-            aux.maxHP +', MP: <strong>' + aux.mp + '</strong>/' + aux.maxHP + ') </li>';
+        if( aux.hp < 1 ) render = '<li data-chara-id="' + list[cont] + '" class = "dead">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp +
+                 ', MP: <strong>'+aux.mp+'</strong>/'+aux.maxMp+') </li>';
         else
-        {
-            var render = '>li data-chara-id="' + list[cont] +'">' + aux.name + '(HP: <strong>' + aux.hp +'</strong>/' +
-            aux.maxHP +', MP: <strong>' + aux.mp + '</strong>/' + aux.maxHP + ') </li>';
-        }
-
+            render = '<li data-chara-id="' + list[cont] + '">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp + 
+                ', MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ') </li>';
+        
         if(aux.party === 'heroes'){
             listHeroes.innerHTML += render;
         }
@@ -70,9 +69,10 @@ battle.on('turn', function (data) {
     // TODO: highlight current character
     //****
     var active = document.querySelector('[data-chara-id="' + data.activeCharacterId + '"]');
-    active.classList.add("active");
+    active.classList.add('active');
 
     // TODO: show battle actions form
+    
 });
 
 battle.on('info', function (data) {
