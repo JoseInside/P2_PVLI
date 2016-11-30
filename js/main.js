@@ -38,33 +38,40 @@ battle.on('start', function (data) {
 battle.on('turn', function (data) {
     
     console.log('TURN', data);
-    
+
+    // TODO: render the characters
+    //****
     var list = Object.keys(this._charactersById);
     var list2 = document.querySelectorAll('.character-list');
-    console.log(list);
-
     var listHeroes = list2[0];
     var listMonsters = list2[1];
+    listHeroes.innerHTML = '';
+    listMonsters.innerHTML = '';
 
-    for (var character in list){
-        var li = document.createElement('li');
-        //var aux = list[character].party;
-        console.log(character);
-        var aux = this._charactersById[list[character]];
-        
-        console.log(aux);
-        li.innerHTML = aux.name + ' (HP: '+ aux.hp + '/' + aux.maxHp + ',' + ' MP: ' + aux.mp + '/' + aux.maxMp + ')';
-        //list2.appendChild(li);
-        li.dataset.charaid = list[character];
+    for (var cont = 0; cont < list.length; cont++ )
+    {
+        var aux = this._charactersById[list[cont]];
+
+        if( aux.hp < 1 ) var render = '<li data-chara-id="' + list[cont] + '" class ="dead">' + aux.name +'(HP: <strong>' + aux.hp +'</strong>/' +
+            aux.maxHP +', MP: <strong>' + aux.mp + '</strong>/' + aux.maxHP + ') </li>';
+        else
+        {
+            var render = '>li data-chara-id="' + list[cont] +'">' + aux.name + '(HP: <strong>' + aux.hp +'</strong>/' +
+            aux.maxHP +', MP: <strong>' + aux.mp + '</strong>/' + aux.maxHP + ') </li>';
+        }
 
         if(aux.party === 'heroes'){
-            listHeroes.appendChild(li);
+            listHeroes.innerHTML += render;
         }
-        else listMonsters.appendChild(li);
+        else listMonsters.inner += render;
         
     }
-    // TODO: render the characters
+    
     // TODO: highlight current character
+    //****
+    var active = document.querySelector('[data-chara-id="' + data.activeCharacterId + '"]');
+    active.classList.add("active");
+
     // TODO: show battle actions form
 });
 
