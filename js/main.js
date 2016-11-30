@@ -38,40 +38,49 @@ battle.on('start', function (data) {
 battle.on('turn', function (data) {
     
     console.log('TURN', data);
-
-    // TODO: render the characters
-    //****
+    
     var list = Object.keys(this._charactersById);
     var list2 = document.querySelectorAll('.character-list');
+    //console.log(list);
+
     var listHeroes = list2[0];
     var listMonsters = list2[1];
-    var render;
     listHeroes.innerHTML = '';
     listMonsters.innerHTML = '';
-    
-    for (var cont = 0; cont < list.length; cont++ )
-    {
-        var aux = this._charactersById[list[cont]];
+    // TODO: render the characters
+    //***
+    for (var character in list){
+        //var li = document.createElement('li');
+        var aux = this._charactersById[list[character]];
+        //console.log(aux);
+        render = '<li data-chara-id="' + list[character] + '">'+ aux.name + ' (HP: <strong>'+ aux.hp + '</strong>/' + aux.maxHp + ',' + ' MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ') </li>';
+        //li.dataset.charaid = list[character];
 
-        if( aux.hp < 1 ) render = '<li data-chara-id="' + list[cont] + '" class = "dead">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp +
-                 ', MP: <strong>'+aux.mp+'</strong>/'+aux.maxMp+') </li>';
-        else
-            render = '<li data-chara-id="' + list[cont] + '">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp + 
-                ', MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ') </li>';
-        
         if(aux.party === 'heroes'){
             listHeroes.innerHTML += render;
         }
         else listMonsters.innerHTML += render;
+        
     }
     
     // TODO: highlight current character
-    //****
-    var active = document.querySelector('#' + data.activeCharacterId );
-    active.classList.add('active');
-
+    //***  
+    var charActivo = document.querySelector('[data-chara-id="'+data.activeCharacterId+'"]');
+    //charActivo.list.toggle("active");
+    charActivo.classList.add("active");
+    
     // TODO: show battle actions form
-
+    //***
+    actionForm.style.display = 'inline';
+    var options = this.options.current._group;
+    var actions = actionForm.querySelector('.choices');
+    
+    actions.innerHTML = "";
+    for(var availableAction in options){
+        //render =  '<li> <label> <input type="radio" name="option" value="' + i + '"required>' + i + '</label></li>';
+        render =  '<li><label><input type="radio" name="option" value="' + availableAction + '"></label></li>';
+        actions.innerHTML += render;
+    }
 
 });
 
