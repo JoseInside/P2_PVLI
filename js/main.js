@@ -1,6 +1,6 @@
 /***************************************************
 *Práctica realizada por:
-*Jose María Monreal y Nahikari I. Madrid Ferrer
+*Jose María Monreal González y Nahikari I. Madrid Ferrer
 ***************************************************/
 
 var battle = new RPG.Battle();
@@ -75,21 +75,25 @@ battle.on('turn', function (data) {
     //***
     actionForm.style.display = 'inline';
     var options = this.options.current._group;
+
     var actions = actionForm.querySelector('.choices');
-    
     actions.innerHTML = "";
     for(var availableAction in options){
-        render =  '<li><label><input type="radio" name="option" value="' + availableAction + '"></label></li>';
+        render =  '<li> <label> <input type="radio" name="option" value="' + availableAction + '"required>' + availableAction + '</label></li>';
+        //render =  '<li><label><input type="radio" name="option" value="' + availableAction + '"></label></li>';
         actions.innerHTML += render;
     }
  
 
 });
 
+//***************************************
+//Esto de abajo no lo entiendo
 battle.on('info', function (data) {
     console.log('INFO', data);
 
     // TODO: display turn info in the #battle-info panel
+    //***
     var effect = data.effect;
     var render;
     var effectTxt = prettifyEffect(effect || {});
@@ -99,18 +103,18 @@ battle.on('info', function (data) {
     switch(data.action)
      {
         case 'attack':
-
-        if(data.success) 
-            render = '<p id="battle-info">' + data.activeCharacterId + ' attacked ' + data.targetId + ' and caused ' + effectsTxt + ' </p>';
+            if(data.success) 
+                render = '<p id="battle-info">' + data.activeCharacterId + ' attacked ' + data.targetId + ' and caused ' + effectsTxt + ' </p>';
             else render = '<strong> ' + name + '</strong> missed atack';
-            break;
+        break;
 
         case 'cast': 
-        render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + 'on'+ data.targetId + ' and caused ' + effectsTxt + ' </p>';
+            render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + 'on'+ data.targetId + ' and caused ' + effectsTxt + ' </p>';
         break;
 
         case 'defend':
-        if (data.sucess) render = '<p id="battle-info">' + data.activeCharacterId + 'defended';
+            if (data.sucess) 
+                render = '<p id="battle-info">' + data.activeCharacterId + 'defended';
         break;
 
      }
@@ -158,7 +162,7 @@ window.onload = function () {
 
         // TODO: select the action chosen by the player
         //***
-        var election = actionForm.elements['options'].value;
+        var election = actionForm.elements['option'].value;
         battle.options.select(election);
 
         // TODO: hide this menu
@@ -166,13 +170,24 @@ window.onload = function () {
         actionForm.style.display='none';
         // TODO: go to either select target menu, or to the select spell menu
         //***
+        if(election === 'attack'){
+            actionForm.style.display = 'none';
+            targetForm.style.display = 'block';
+        }
+        else if (election === 'cast'){
+            actionForm.style.display = 'none';
+            spellForm.style.display = 'block';
+        }
+        /*
         if(election != 'defend'){
             actionForm.style.display = 'none';
             spellForm.style.display = 'block';
          }else{
              actionForm.style.display = 'none';
-         targetForm.style.display = 'block';
-    }
+            targetForm.style.display = 'block';
+         }
+         */
+    
 
 });
 
@@ -180,7 +195,7 @@ window.onload = function () {
         evt.preventDefault();
         // TODO: select the target chosen by the player
         //***
-        var election = targetForm.elements['option'].value;
+        var election = targetForm.elements['target'].value;
 
         // TODO: hide this menu
         //***
@@ -208,11 +223,14 @@ window.onload = function () {
         var election = spellForm.elements['option'].value;
         battle.options.select(election);
         // TODO: hide this menu
-        //****
+        //***
         spellForm.style.display = 'none';
         // TODO: go to select target menu
-        //****
+        //***
         targetForm.style.display = 'block';
+        battle.options.select(chosenTarget);
+        targetForm.style.display = 'none';
+        actionForm.style.display = 'block';
     });
 
 
