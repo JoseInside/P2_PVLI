@@ -74,16 +74,38 @@ battle.on('turn', function (data) {
     // TODO: show battle actions form
     //***
     actionForm.style.display = 'inline';
-    var options = this.options.current._group;
+    var listActions = this.options.current._group;
 
     var actions = actionForm.querySelector('.choices');
     actions.innerHTML = "";
-    for(var availableAction in options){
+    //************************************************************!!
+    for(var availableAction in listActions){
         render =  '<li> <label> <input type="radio" name="option" value="' + availableAction + '"required>' + availableAction + '</label></li>';
         //render =  '<li><label><input type="radio" name="option" value="' + availableAction + '"></label></li>';
         actions.innerHTML += render;
     }
- 
+
+
+    targetForm.style.display = 'none';
+    var listTargets = this._charactersById;
+    var targets = targetForm.querySelector('.choices');
+    targets.innerHTML = "";
+    
+    for(var availableTarget in listTargets){
+        render =  '<li><label><input type="radio" name="target" value="' + availableTarget + '"required>' + availableTarget + '</label></li>';
+        targets.innerHTML += render;
+    }
+    
+    
+    spellForm.style.display = 'none';
+    var listSpells = this._grimoires[this._activeCharacter.party];
+    
+    var spells = spellForm.querySelector('.choices');
+    spells.innerHTML = "";
+    for(var availableSpell in listSpells){
+        render =  '<li><label><input type="radio" name="spell" value="' + availableSpell + '"required>' + availableSpell + '</label></li>';
+        spells.innerHTML += render;
+    } 
 
 });
 
@@ -220,7 +242,7 @@ window.onload = function () {
         evt.preventDefault();
         // TODO: select the spell chosen by the player
         //***
-        var election = spellForm.elements['option'].value;
+        var election = spellForm.elements['spell'].value;
         battle.options.select(election);
         // TODO: hide this menu
         //***
