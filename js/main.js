@@ -78,10 +78,9 @@ battle.on('turn', function (data) {
 
     var actions = actionForm.querySelector('.choices');
     actions.innerHTML = "";
-    //************************************************************!!
+
     for(var availableAction in listActions){
         render =  '<li> <label> <input type="radio" name="option" value="' + availableAction + '"required>' + availableAction + '</label></li>';
-        //render =  '<li><label><input type="radio" name="option" value="' + availableAction + '"></label></li>';
         actions.innerHTML += render;
     }
 
@@ -99,7 +98,6 @@ battle.on('turn', function (data) {
     
     spellForm.style.display = 'none';
     var listSpells = this._grimoires[this._activeCharacter.party];
-    
     var spells = spellForm.querySelector('.choices');
     spells.innerHTML = "";
     for(var availableSpell in listSpells){
@@ -126,12 +124,12 @@ battle.on('info', function (data) {
      {
         case 'attack':
             if(data.success) 
-                render = '<p id="battle-info">' + data.activeCharacterId + ' attacked ' + data.targetId + ' and caused ' + effectsTxt + ' </p>';
+                render = '<p id="battle-info">' + data.activeCharacterId + ' attacked ' + data.targetId + ' and caused ' + effectTxt + ' </p>';
             else render = '<strong> ' + name + '</strong> missed atack';
         break;
 
         case 'cast': 
-            render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + 'on'+ data.targetId + ' and caused ' + effectsTxt + ' </p>';
+            render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + 'on'+ data.targetId + ' and caused ' + effectTxt + ' </p>';
         break;
 
         case 'defend':
@@ -199,17 +197,7 @@ window.onload = function () {
         else if (election === 'cast'){
             actionForm.style.display = 'none';
             spellForm.style.display = 'block';
-        }
-        /*
-        if(election != 'defend'){
-            actionForm.style.display = 'none';
-            spellForm.style.display = 'block';
-         }else{
-             actionForm.style.display = 'none';
-            targetForm.style.display = 'block';
-         }
-         */
-    
+        }    
 
 });
 
@@ -218,7 +206,7 @@ window.onload = function () {
         // TODO: select the target chosen by the player
         //***
         var election = targetForm.elements['target'].value;
-
+        battle.options.select(election);
         // TODO: hide this menu
         //***
         targetForm.style.display = 'none';
@@ -250,9 +238,10 @@ window.onload = function () {
         // TODO: go to select target menu
         //***
         targetForm.style.display = 'block';
-        battle.options.select(chosenTarget);
+        /*//battle.options.select(chosenTarget);
         targetForm.style.display = 'none';
         actionForm.style.display = 'block';
+        */
     });
 
 
@@ -264,7 +253,7 @@ window.onload = function () {
           battle.options.cancel();
         // TODO: hide this form
         //***
-          targetForm.style.display = 'none';
+          spellForm.style.display = 'none';
         // TODO: go to select action menu
         //***
           actionForm.style.display = 'block';
