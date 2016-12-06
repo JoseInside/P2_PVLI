@@ -1,7 +1,7 @@
-/***************************************************
+/**********************************************************
 *Práctica realizada por:
 *Jose María Monreal González y Nahikari I. Madrid Ferrer
-***************************************************/
+**********************************************************/
 
 var battle = new RPG.Battle();
 var actionForm, spellForm, targetForm;
@@ -120,6 +120,7 @@ battle.on('info', function (data) {
     var render;
     var effectTxt = prettifyEffect(effect || {});
 
+
     switch(data.action)
      {
         case 'attack':
@@ -228,12 +229,13 @@ window.onload = function () {
         actionForm.style.display = 'block';
     });
 
+   
     spellForm.addEventListener('submit', function (evt) {
         
         evt.preventDefault();
         // TODO: select the spell chosen by the player
         //***
-        var election = spellForm.elements['spell'].value;
+        var election = spellForm.elements['option'].value;
         battle.options.select(election);
         // TODO: hide this menu
         //***
@@ -257,6 +259,7 @@ window.onload = function () {
         battle.options.cancel();
         // TODO: hide this form
         //***
+        targetForm.style.display='none';
         spellForm.style.display = 'none';
         // TODO: go to select action menu
         //***
