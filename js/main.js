@@ -58,7 +58,10 @@ battle.on('turn', function (data) {
     for (var character in list)
     {
         var aux = this._charactersById[list[character]];
-        render = '<li data-chara-id="' + list[character] + '">'+ aux.name + ' (HP: <strong>'+ aux.hp + '</strong>/' + aux.maxHp + ',' + ' MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ') </li>';
+        
+        if (aux.hp < 1) render = '<li data-chara-id="' + list[character] + '" class = "dead">'+ aux.name + '(HP: <strong>' + aux.hp + '</strong>/'+ aux.maxHp + ', ' + 'MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ')</li>';
+        else render = '<li data-chara-id="' + list[character] + '">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp + ', ' + 'MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ')</li>';
+
         if(aux.party === 'heroes'){
             listHeroes.innerHTML += render;
         }
@@ -105,10 +108,9 @@ battle.on('turn', function (data) {
         spells.innerHTML += render;
     } 
 
+    
 });
 
-//***************************************
-//Esto de abajo no lo entiendo
 battle.on('info', function (data) {
     console.log('INFO', data);
 
@@ -117,8 +119,6 @@ battle.on('info', function (data) {
     var effect = data.effect;
     var render;
     var effectTxt = prettifyEffect(effect || {});
-    //infoPanel.style.display = 'inline'; esto no va me lo dijo María
-    var targetName = this._charactersById[data.targetId].name;
 
     switch(data.action)
      {
@@ -145,7 +145,7 @@ battle.on('end', function (data) {
     console.log('END', data);
 
     // TODO: re-render the parties so the death of the last character gets reflected
-    //*** aqui es que es lo  mismo q en render characters...
+    //*** Aquí es lo mismo que en render characters.
     var list = Object.keys(this._charactersById);
     var list2 = document.querySelectorAll('.character-list');
     var listHeroes = list2[0];
@@ -202,6 +202,7 @@ window.onload = function () {
 });
 
     targetForm.addEventListener('submit', function (evt) {
+        
         evt.preventDefault();
         // TODO: select the target chosen by the player
         //***
@@ -214,6 +215,7 @@ window.onload = function () {
 
     targetForm.querySelector('.cancel')
     .addEventListener('click', function (evt) {
+        
         evt.preventDefault();
         // TODO: cancel current battle options
         //***
@@ -227,6 +229,7 @@ window.onload = function () {
     });
 
     spellForm.addEventListener('submit', function (evt) {
+        
         evt.preventDefault();
         // TODO: select the spell chosen by the player
         //***
@@ -238,25 +241,26 @@ window.onload = function () {
         // TODO: go to select target menu
         //***
         targetForm.style.display = 'block';
-        /*//battle.options.select(chosenTarget);
+        battle.options.select(election);
         targetForm.style.display = 'none';
         actionForm.style.display = 'block';
-        */
+        
     });
 
 
     spellForm.querySelector('.cancel')
     .addEventListener('click', function (evt) {
+        
         evt.preventDefault();
         // TODO: cancel current battle options
         //*** 
-          battle.options.cancel();
+        battle.options.cancel();
         // TODO: hide this form
         //***
-          spellForm.style.display = 'none';
+        spellForm.style.display = 'none';
         // TODO: go to select action menu
         //***
-          actionForm.style.display = 'block';
+        actionForm.style.display = 'block';
 
     });
 
