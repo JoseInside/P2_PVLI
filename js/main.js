@@ -59,7 +59,9 @@ battle.on('turn', function (data) {
     {
         var aux = this._charactersById[list[character]];
         
-        if (aux.hp < 1) render = '<li data-chara-id="' + list[character] + '" class = "dead">'+ aux.name + '(HP: <strong>' + aux.hp + '</strong>/'+ aux.maxHp + ', ' + 'MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ')</li>';
+        if (aux.hp < 1){
+            render = '<li data-chara-id="' + list[character] + '" class = "dead">'+ aux.name + '(HP: <strong>' + aux.hp + '</strong>/'+ aux.maxHp + ', ' + 'MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ')</li>';
+        }
         else render = '<li data-chara-id="' + list[character] + '">' + aux.name + '(HP: <strong>' + aux.hp + '</strong>/' + aux.maxHp + ', ' + 'MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ')</li>';
 
         if(aux.party === 'heroes'){
@@ -68,8 +70,8 @@ battle.on('turn', function (data) {
         else listMonsters.innerHTML += render;
         
     }
-
-   // TODO: highlight current character
+    
+    // TODO: highlight current character
     //***  
     var charActivo = document.querySelector('[data-chara-id="'+data.activeCharacterId+'"]');
     charActivo.classList.add("active");
@@ -93,25 +95,21 @@ battle.on('turn', function (data) {
     var targets = targetForm.querySelector('.choices');
     targets.innerHTML = "";
 
-    
     for(var availableTarget in listTargets){
         render =  '<li><label><input type="radio" name="target" value="' + availableTarget + '"required>' + availableTarget + '</label></li>';
         targets.innerHTML += render;
     }
-    
     
     spellForm.style.display = 'none';
     var listSpells = this._grimoires[this._activeCharacter.party];
     var spells = spellForm.querySelector('.choices');
     spells.innerHTML = "";
 
-    //botón de los egg, cats
     var button = spellForm.querySelector('button');
-    if(boton(spells))
-        button.disabled = true;
-    else{
+    if (data.party === 'heroes' && this._activeCharacter.mp > 10){
         button.disabled = false;
     }
+    else button.disabled = true;
 
     for(var availableSpell in listSpells){
         render =  '<li><label><input type="radio" name="spell" value="' + availableSpell + '"required>' + availableSpell + '</label></li>';
@@ -138,29 +136,25 @@ battle.on('info', function (data) {
         case 'attack':
             if(data.success) 
                 render = '<p id="battle-info">' + data.activeCharacterId + ' attacked ' + data.targetId + ' and caused ' + effectTxt + ' </p>';
-            else render = '<strong> ' + name + '</strong> missed atack';
+            else render = '<strong> ' + data.activeCharacterId + '</strong> missed atack';
         break;
 
         case 'cast': 
-            render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + 'on'+ data.targetId + ' and caused ' + effectTxt + ' </p>';
+            if (data.success)
+                render = '<p id="battle-info">' + data.activeCharacterId + ' casted ' + data.scrollName + ' on '+ data.targetId + ' and caused ' + effectTxt + ' </p>';
+            else render = '<strong> ' + data.activeCharacterId + '</strong> missed atack';
         break;
 
         case 'defend':
-            if (data.sucess) 
-                render = '<p id="battle-info">' + data.activeCharacterId + 'defended';
+            if (data.success) 
+                render = '<p id="battle-info">' + data.activeCharacterId + ' defended';
         break;
 
      }
 
      infoPanel.innerHTML += render;
 });
-    //para deshabilitar botón
-    function boton(obj)
-    {
-        for (var i in obj) 
-            {return false}
-        return true;
-    }
+
 
 battle.on('end', function (data) {
     console.log('END', data);
@@ -179,6 +173,7 @@ battle.on('end', function (data) {
     {
         var aux = this._charactersById[list[character]];
         render = '<li data-chara-id="' + list[character] + '">'+ aux.name + ' (HP: <strong>'+ aux.hp + '</strong>/' + aux.maxHp + ',' + ' MP: <strong>' + aux.mp + '</strong>/' + aux.maxMp + ') </li>';
+        
         if(aux.party === 'heroes'){
             listHeroes.innerHTML += render;
         }
@@ -188,7 +183,7 @@ battle.on('end', function (data) {
     // TODO: display 'end of battle' message, showing who won
     //***
     document.getElementById("battle-info").innerHTML = "Battle ends...Game Over, Win <strong>" + data.winner + '</strong>';
-    document.querySelector('form[name = end]').style.display = 'inline';
+    document.querySelector("form[name = end]").style.display = 'inline';
   
 });
 
@@ -229,9 +224,14 @@ window.onload = function () {
         //***
         var election = targetForm.elements['target'].value;
         battle.options.select(election);
+       
         // TODO: hide this menu
         //***
         targetForm.style.display = 'none';
+        
+        // TODO: go to select action menu
+        //***
+        actionForm.style.display = 'block';
     });
 
     targetForm.querySelector('.cancel')
@@ -258,15 +258,11 @@ window.onload = function () {
         var election = spellForm.elements['spell'].value;
         battle.options.select(election);
         // TODO: hide this menu
-        //***
+         //***
         spellForm.style.display = 'none';
         // TODO: go to select target menu
         //***
         targetForm.style.display = 'block';
-        battle.options.select(election);
-        targetForm.style.display = 'none';
-        actionForm.style.display = 'block';
-        
     });
 
 
