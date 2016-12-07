@@ -92,6 +92,7 @@ battle.on('turn', function (data) {
     var listTargets = this._charactersById;
     var targets = targetForm.querySelector('.choices');
     targets.innerHTML = "";
+
     
     for(var availableTarget in listTargets){
         render =  '<li><label><input type="radio" name="target" value="' + availableTarget + '"required>' + availableTarget + '</label></li>';
@@ -103,6 +104,15 @@ battle.on('turn', function (data) {
     var listSpells = this._grimoires[this._activeCharacter.party];
     var spells = spellForm.querySelector('.choices');
     spells.innerHTML = "";
+
+    //botón de los egg, cats
+    var button = spellForm.querySelector('button');
+    if(boton(spells))
+        button.disabled = true;
+    else{
+        button.disabled = false;
+    }
+
     for(var availableSpell in listSpells){
         render =  '<li><label><input type="radio" name="spell" value="' + availableSpell + '"required>' + availableSpell + '</label></li>';
         spells.innerHTML += render;
@@ -119,6 +129,8 @@ battle.on('info', function (data) {
     var effect = data.effect;
     var render;
     var effectTxt = prettifyEffect(effect || {});
+
+    infoPanel.innerHTML = "";
 
 
     switch(data.action)
@@ -140,7 +152,15 @@ battle.on('info', function (data) {
 
      }
 
+     infoPanel.innerHTML += render;
 });
+    //para deshabilitar botón
+    function boton(obj)
+    {
+        for (var i in obj) 
+            {return false}
+        return true;
+    }
 
 battle.on('end', function (data) {
     console.log('END', data);
@@ -235,7 +255,7 @@ window.onload = function () {
         evt.preventDefault();
         // TODO: select the spell chosen by the player
         //***
-        var election = spellForm.elements['option'].value;
+        var election = spellForm.elements['spell'].value;
         battle.options.select(election);
         // TODO: hide this menu
         //***
