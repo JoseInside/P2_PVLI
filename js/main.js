@@ -14,27 +14,65 @@ function prettifyEffect(obj) {
     }).join(', ');
 }
 
+//Creamos el random
+function getRandomBattle(party){
+
+    var rndHeroes = Math.floor(Math.random() * 3) + 1;
+    var rndMonster;
+    var members = [];
+
+    if(party === 'heroes'){  
+        for(var i = 0; i < rndHeroes; i++)
+        {
+            rndMonster = Math.floor(Math.random() * 3) + 1;
+            
+                if ( rndMonster === 1) 
+                {
+                   members[i] = RPG.entities.characters.heroTank;
+                }else {
+                   members[i] = RPG.entities.characters.heroWizard;
+                }
+        }
+    } else {
+         for(var i = 0; i < rndHeroes; i++)
+         {
+            rndMonster = Math.floor(Math.random() * 3) + 1;
+            
+                if ( rndMonster === 1) {
+                    members[i] = RPG.entities.characters.monsterSlime;
+                }else if(rndMonster === 2){
+                    members[i] = RPG.entities.characters.monsterBat;
+                }else{
+                    members[i] = RPG.entities.characters.monsterSkeleton;
+            }
+         }
+    }
+    
+    return members;
+
+    }
+
 
 battle.setup({
     heroes: {
-        members: [
-            RPG.entities.characters.heroTank,
-            RPG.entities.characters.heroWizard
-        ],
+        members: getRandomBattle('heroes'),
+    
         grimoire: [
             RPG.entities.scrolls.health,
             RPG.entities.scrolls.fireball
         ]
     },
     monsters: {
-        members: [
-            RPG.entities.characters.monsterSlime,
-            RPG.entities.characters.monsterBat,
-            RPG.entities.characters.monsterSkeleton,
-            RPG.entities.characters.monsterBat
+        members: getRandomBattle('monsters'),
+        
+        grimoire: [
+            RPG.entities.scrolls.health,
+            RPG.entities.scrolls.fireball
         ]
     }
 });
+//fin random
+
 
 battle.on('start', function (data) {
     console.log('START', data);
